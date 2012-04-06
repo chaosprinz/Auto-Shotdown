@@ -24,4 +24,16 @@ def acpi_test_loop
   end
 end
 
+def acpi_critic_loop
+  while acpi_down_test[1] > 4 && acpi_down_test[0]
+    sleep 25
+  end
+  if acpi_down_test[0] == true
+    puts "welt"
+    system("sudo shutdown -h now")
+  else
+    acpi_test_loop
+  end
+end
+
 acpi_test_loop
