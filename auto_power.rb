@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
+test_time = 240
+critic_time = 20
+min_battery_work = 10
+min_battery_critic = 4
 
 def acpi_down_test
   acpi = `acpi`
@@ -13,8 +17,8 @@ def acpi_down_test
 end
 
 def acpi_test_loop
-  while acpi_down_test[1] > 10 do
-    sleep 240
+  while acpi_down_test[1] > min_battery do
+    sleep test_time
   end
   if acpi_down_test[0] == true
     system "zenity --info --text 'akku ist bei #{acpi_down_test[1]}% Leistung'"
@@ -25,8 +29,8 @@ def acpi_test_loop
 end
 
 def acpi_critic_loop
-  while acpi_down_test[1] > 4 && acpi_down_test[0]
-    sleep 25
+  while acpi_down_test[1] min_battery_critic > && acpi_down_test[0]
+    sleep critic_time
   end
   if acpi_down_test[0] == true
     puts "welt"
