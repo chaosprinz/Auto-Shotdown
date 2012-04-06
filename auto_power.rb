@@ -21,7 +21,9 @@ def acpi_test_loop
     sleep test_time
   end
   if acpi_down_test[0] == true
-    system "zenity --info --text 'akku ist bei #{acpi_down_test[1]}% Leistung'"
+    fork do
+      system "zenity --info --text 'akku ist bei #{acpi_down_test[1]}% Leistung'"
+    end
     acpi_critic_loop
   else
     acpi_test_loop
