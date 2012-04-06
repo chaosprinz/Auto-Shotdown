@@ -12,3 +12,16 @@ def acpi_down_test
   [dis,bat]
 end
 
+def acpi_test_loop
+  while acpi_down_test[1] > 10 do
+    sleep 240
+  end
+  if acpi_down_test[0] == true
+    system "zenity --info --text 'akku ist bei #{acpi_down_test[1]}% Leistung'"
+    acpi_critic_loop
+  else
+    acpi_test_loop
+  end
+end
+
+acpi_test_loop
