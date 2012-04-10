@@ -8,12 +8,6 @@ $0 = "autoshotdown"
 @min_battery_work = 10
 @min_battery_critic = 4
 
-
-def on_discharge
-  fork {system " zenity --info --text 'akku ist bei #{acpi_down_test[1]}% Leistung. Das System wird demnächst heruntergefahren."}
-  acpi_critic_loop
-end
-
 def acpi_down_test
   acpi = `acpi`
   if acpi.match /Discharging/
@@ -25,21 +19,24 @@ def acpi_down_test
   [dis,bat]
 end
 
-def acpi_test_loop
-  while acpi_down_test[1] > @min_battery_work do
-    sleep @test_time
-  end
-  acpi_down_test[0] ? on_discharge : acpi_test_loop 
+def on_low_discharge
+  fork {system " zenity --info --text 'akku ist bei #{acpi_down_test[1]}% Leistung. Das System wird demnächst heruntergefahren."}
 end
 
-def acpi_critic_loop
-  while acpi_down_test[1] > @min_battery_critic && acpi_down_test[0]
-    sleep @critic_time
-  end
-  if acpi_down_test[0] 
-    system("sudo shutdown -h now")
-  else
-    return acpi_test_loop
+def on_critic_discharge
+  fork {system("sudo shutdown -h now")}
+end
+
+def acpi_test_loop
+  loop do
+    charge,offstate = acpi_down_test[1],acpi_down_test[0]
+    sleep_time = charge> @min_battery_work ? @test_time : @critic_time
+    sleep sleep_time
+    if offstate && charge<= @min_battery_work
+      on_low_discharge
+    elsif offstate && charge <= @critic_time
+      on_critic_discharge
+    end
   end
 end
 
