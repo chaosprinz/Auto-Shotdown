@@ -1,9 +1,18 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
-test_time = 240
-critic_time = 20
-min_battery_work = 10
-min_battery_critic = 4
+
+$0 = "autoshotdown"
+
+@test_time = 240
+@critic_time = 20
+@min_battery_work = 10
+@min_battery_critic = 4
+
+
+def on_discharge
+  fork {system " zenity --info --text 'akku ist bei #{acpi_down_test[1]}% Leistung. Das System wird demnächst heruntergefahren."}
+  acpi_critic_loop
+end
 
 def acpi_down_test
   acpi = `acpi`
@@ -17,28 +26,20 @@ def acpi_down_test
 end
 
 def acpi_test_loop
-  while acpi_down_test[1] > min_battery do
-    sleep test_time
+  while acpi_down_test[1] > @min_battery_work do
+    sleep @test_time
   end
-  if acpi_down_test[0] == true
-    fork do
-      system "zenity --info --text 'akku ist bei #{acpi_down_test[1]}% Leistung'"
-    end
-    acpi_critic_loop
-  else
-    acpi_test_loop
-  end
+  acpi_down_test[0] ? on_discharge : acpi_test_loop 
 end
 
 def acpi_critic_loop
-  while acpi_down_test[1] min_battery_critic > && acpi_down_test[0]
-    sleep critic_time
+  while acpi_down_test[1] > @min_battery_critic && acpi_down_test[0]
+    sleep @critic_time
   end
-  if acpi_down_test[0] == true
-    puts "welt"
+  if acpi_down_test[0] 
     system("sudo shutdown -h now")
   else
-    acpi_test_loop
+    return acpi_test_loop
   end
 end
 
