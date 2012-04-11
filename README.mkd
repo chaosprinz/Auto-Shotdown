@@ -1,12 +1,12 @@
-=Autoshotdown
+#Autoshotdown
 
-==What is it?
+##What is it?
 It checks the battery-state of your note/net-book and gives you a message-window when its discharging and on low-power. After the message, there is time-window in which the computer can be connected to a power-supply-unit. After that time-window the computer will shutdown graceful.
 
-==Why has it a silly name?
+##Why has it a silly name?
 It was an spelling error. Like good projects it was programmed late at night. The time we love to programm at, but we better should go sleep. I found it funny and so it has its name.
 
-==Are there future-plans.
+##Are there future-plans.
 Yeah, there are. The next release-tag which will be 0.2 and contain the following:
 -will be based on a own class
 -the depency for the acpi-package will be removed
