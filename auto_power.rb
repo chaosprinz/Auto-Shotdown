@@ -10,13 +10,7 @@ $0 = "autoshotdown"
 
 def acpi_down_test
   acpi = `acpi`
-  if acpi.match /Discharging/
-    dis = true
-  else
-    dis = false
-  end
-  bat = acpi.match(/[\d]+%/).to_s.gsub('%','').to_i
-  [dis,bat]
+  [acpi.match(/Discharging/),acpi.match(/[\d]+%/).to_s.gsub('%','').to_i]
 end
 
 def on_low_discharge
