@@ -28,7 +28,7 @@ def acpi_test_loop
     sleep sleep_time
     if offstate && charge<= @min_battery_work
       on_low_discharge
-    elsif offstate && charge <= @critic_time
+    elsif offstate && charge <= @min_battery_critic
       on_critic_discharge
     end
   end
